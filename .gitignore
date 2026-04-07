@@ -1,0 +1,65 @@
+# ─── Environment & Secrets ──────────────────────────────────
+.env
+*.env.local
+*.env.*.local
+secrets/
+
+# ─── Python ─────────────────────────────────────────────────
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.Python
+.venv/
+venv/
+env/
+dist/
+build/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+*.so
+
+# ─── Node / JS ──────────────────────────────────────────────
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.npm
+.yarn-integrity
+dist/
+.next/
+
+# ─── React Native / Expo ────────────────────────────────────
+.expo/
+.expo-shared/
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+*.orig.*
+web-build/
+android/
+ios/
+
+# ─── ML Models (large binary assets) ───────────────────────
+*.pt
+*.pth
+*.h5
+*.tflite
+*.onnx
+ai-service/models/weights/
+
+# ─── Docker ─────────────────────────────────────────────────
+.docker/
+
+# ─── IDE ────────────────────────────────────────────────────
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ─── OS ─────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db

@@ -1,0 +1,80 @@
+version: "3.9"
+
+# ═══════════════════════════════════════════════════════════
+#  NaviSense · Local Orchestration
+#  Run:  docker-compose up --build
+#  GPU support requires nvidia-container-toolkit installed on host.
+# ═══════════════════════════════════════════════════════════
+
+services:
+
+  # ── AI Microservice ─────────────────────────────────────
+  ai-service:
+    build:
+      context: ./ai-service
+      dockerfile: Dockerfile
+    container_name: navisense-ai
+    ports:
+      - "8000:8000"
+    env_file: .env
+    volumes:
+      - ./ai-service:/app
+      - model-weights:/app/models/weights    # persist downloaded weights
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: 1
+              capabilities: [gpu]             # RTX 3050 passthrough
+    networks:
+      - navisense-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # ── API Gateway ──────────────────────────────────────────
+  api-gateway:
+    build:
+      context: ./api-gateway
+      dockerfile: Dockerfile
+    container_name: navisense-api
+    ports:
+      - "3001:3001"
+    env_file: .env
+    depends_on:
+      ai-service:
+        condition: service_healthy
+    networks:
+      - navisense-net
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+
+  # ── Local Supabase stack (mirrors cloud) ─────────────────
+  # See: https://supabase.com/docs/guides/cli/local-development
+  supabase-db:
+    image: supabase/postgres:15.1.0.117
+    container_name: navisense-db
+    ports:
+      - "54322:5432"
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    volumes:
+      - supabase-data:/var/lib/postgresql/data
+      - ./scripts/migrations:/docker-entrypoint-initdb.d   # run migrations on start
+    networks:
+      - navisense-net
+
+networks:
+  navisense-net:
+    driver: bridge
+
+volumes:
+  model-weights:
+  supabase-data:
