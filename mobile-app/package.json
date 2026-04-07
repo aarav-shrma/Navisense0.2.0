@@ -1,7 +1,7 @@
 {
   "name": "navisense-mobile",
   "version": "1.0.0",
-  "main": "expo-router/entry",
+  "main": "index.js",
   "description": "NaviSense Mobile App — AI-powered accessibility for the visually impaired",
   "scripts": {
     "start": "expo start",
