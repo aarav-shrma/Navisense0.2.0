@@ -29,8 +29,7 @@ import * as Speech from "expo-speech";
 import { useDetection } from "../hooks/useDetection";
 import { useVoiceAssistant } from "../hooks/useVoiceAssistant";
 import { useNaviStore, AppState } from "../hooks/useNaviStore";
-import { ObstacleOverlay } from "../components/ObstacleOverlay";
-import { StateIndicator } from "../components/StateIndicator";
+import { ObstacleOverlay, StateIndicator } from "../components/ObstacleOverlay";
 
 const { width, height } = Dimensions.get("window");
 
